@@ -7,7 +7,9 @@ import org.firstinspires.ftc.teamcode.config.BinaryBinding
 import kotlin.math.abs
 import kotlin.time.Duration
 
-class BindingManager(val gamepads: Gamepads) {
+class BindingManager(
+    val gamepads: Gamepads,
+) {
     /**
      * Check if the action was pressed since the last call of this function.
      */
@@ -28,7 +30,6 @@ class BindingManager(val gamepads: Gamepads) {
             BinaryAction.RIGHT_STICK_BUTTON -> gamepad.rightStickButtonWasPressed()
         }
     }
-
 
     /**
      * Check if the action was released since the last call
@@ -77,14 +78,15 @@ class BindingManager(val gamepads: Gamepads) {
      */
     fun readAnalog(binding: AnalogBinding): Float {
         val gamepad = gamepads[binding.gamepad]
-        val raw = when (binding.action) {
-            AnalogAction.LEFT_STICK_X -> gamepad.left_stick_x
-            AnalogAction.LEFT_STICK_Y -> -gamepad.left_stick_y
-            AnalogAction.RIGHT_STICK_X -> gamepad.right_stick_x
-            AnalogAction.RIGHT_STICK_Y -> -gamepad.right_stick_y
-            AnalogAction.LEFT_TRIGGER -> gamepad.left_trigger
-            AnalogAction.RIGHT_TRIGGER -> gamepad.right_trigger
-        }
+        val raw =
+            when (binding.action) {
+                AnalogAction.LEFT_STICK_X -> gamepad.left_stick_x
+                AnalogAction.LEFT_STICK_Y -> -gamepad.left_stick_y
+                AnalogAction.RIGHT_STICK_X -> gamepad.right_stick_x
+                AnalogAction.RIGHT_STICK_Y -> -gamepad.right_stick_y
+                AnalogAction.LEFT_TRIGGER -> gamepad.left_trigger
+                AnalogAction.RIGHT_TRIGGER -> gamepad.right_trigger
+            }
         val v = raw.coerceIn(-1f, 1f)
         return if (abs(v) < binding.deadZone) 0f else v * binding.scale
     }
@@ -92,13 +94,17 @@ class BindingManager(val gamepads: Gamepads) {
     /**
      * Rumble the `targetGamepads` for a given `duration`.
      */
-    fun rumble(duration: Duration, vararg targetGamepads: GamepadId) {
+    fun rumble(
+        duration: Duration,
+        vararg targetGamepads: GamepadId,
+    ) {
         for (gamepadId in targetGamepads) {
             val gamepad = gamepads[gamepadId]
 
-            val durationMs = duration.inWholeMilliseconds
-                .coerceIn(0, Int.MAX_VALUE.toLong())
-                .toInt()
+            val durationMs =
+                duration.inWholeMilliseconds
+                    .coerceIn(0, Int.MAX_VALUE.toLong())
+                    .toInt()
 
             gamepad.rumble(durationMs)
         }
