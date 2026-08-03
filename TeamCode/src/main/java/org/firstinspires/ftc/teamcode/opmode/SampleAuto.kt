@@ -19,8 +19,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
  */
 @Autonomous(name = "Sample Auto", group = "Samples")
 class SampleAuto : PedroCommandOpMode() {
-    private val panelsTelemetry: TelemetryManager = PanelsTelemetry.telemetry
-
     private val startPose = Pose(22.0, 122.0, Math.toRadians(324.0))
     private val scorePose = Pose(60.0, 84.0, Math.toRadians(135.0))
     private val pickup1Pose = Pose(17.0, 84.0, Math.toRadians(180.0))

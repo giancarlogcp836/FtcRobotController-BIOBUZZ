@@ -4,10 +4,10 @@ import com.pedropathing.ivy.Command
 import com.pedropathing.ivy.commands.Commands
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.config.BindingsConfig
 import org.firstinspires.ftc.teamcode.config.DriveConfig
-import org.firstinspires.ftc.teamcode.state.BindingManager
+import org.firstinspires.ftc.teamcode.state.managers.BindingManager
+import org.firstinspires.ftc.teamcode.state.managers.HardwareManager
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -15,12 +15,12 @@ import kotlin.math.max
  * Ivy-owned drive subsystem. Tunable values live in [DriveConfig] / [BindingsConfig].
  */
 class Drive(
-    hardwareMap: HardwareMap,
+    hardwareManager: HardwareManager,
 ) {
-    private val leftFront: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, DriveConfig.leftFrontName)
-    private val leftRear: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, DriveConfig.leftRearName)
-    private val rightFront: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, DriveConfig.rightFrontName)
-    private val rightRear: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, DriveConfig.rightRearName)
+    private val leftFront: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.leftFrontName)
+    private val leftRear: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.leftRearName)
+    private val rightFront: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.rightFrontName)
+    private val rightRear: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.rightRearName)
 
     init {
         listOf(leftFront, leftRear, rightFront, rightRear).forEach { motor ->

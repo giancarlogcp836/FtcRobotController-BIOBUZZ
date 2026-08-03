@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.exceptions
 
+import kotlin.reflect.KClass
+
 class HardwareMissingException(
-    val hardwareId: String,
-) : Exception("Hardware device not found: $hardwareId")
+    id: String,
+    type: KClass<*>,
+) : Exception("Hardware $id (${type.simpleName}) was not found!")

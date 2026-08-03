@@ -10,17 +10,26 @@ class HardwareManager(
     val hardwareMap: HardwareMap,
 ) {
     /**
-     * Attempt to get hardware by ID.
-     * @throws HardwareMissingException if the hardware is not found
+     * Attempt to get hardware by its `id`.
+     * @return [Result.success] with the hardware if found, or
+     * [Result.failure] with the error.
      */
     inline fun <reified T> getHardware(id: String): Result<T> {
         return try {
             val hardware =
-                hardwareMap.tryGet(T::class.java, id)
-                    ?: return Result.failure(HardwareMissingException(id))
+                hardwareMap.tryGet(T::class.java, id) ?: return Result.failure(
+                    HardwareMissingException(id, T::class),
+                )
             Result.success(hardware)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
+    /**
+     * Get hardware by its `id`.
+     * @throws HardwareMissingException if missing.
+     */
+    inline fun <reified T> requireHardware(id: String): T =
+        hardwareMap.tryGet(T::class.java, id) ?: throw HardwareMissingException(id, T::class)
 }
