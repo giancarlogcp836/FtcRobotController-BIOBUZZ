@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.state
+package org.firstinspires.ftc.teamcode.state.managers
 
 import org.firstinspires.ftc.teamcode.config.AnalogAction
 import org.firstinspires.ftc.teamcode.config.AnalogBinding
 import org.firstinspires.ftc.teamcode.config.BinaryAction
 import org.firstinspires.ftc.teamcode.config.BinaryBinding
+import org.firstinspires.ftc.teamcode.state.GamepadId
+import org.firstinspires.ftc.teamcode.state.Gamepads
 import kotlin.math.abs
 import kotlin.time.Duration
 

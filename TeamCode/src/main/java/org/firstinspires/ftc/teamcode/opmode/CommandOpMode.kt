@@ -4,8 +4,8 @@ import com.bylazar.telemetry.PanelsTelemetry
 import com.bylazar.telemetry.TelemetryManager
 import com.pedropathing.ivy.Scheduler
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import org.firstinspires.ftc.teamcode.state.managers.BindingManager
 import org.firstinspires.ftc.teamcode.state.Gamepads
+import org.firstinspires.ftc.teamcode.state.managers.BindingManager
 import org.firstinspires.ftc.teamcode.state.managers.HardwareManager
 
 /**

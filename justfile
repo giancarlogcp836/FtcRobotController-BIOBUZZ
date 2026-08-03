@@ -9,6 +9,10 @@ release: build-release deploy-release
 fmt:
     ktlint -F
 
+# Match CI: fail on style violations without writing fixes.
+lint:
+    ktlint "**/*.kt" "**/*.kts"
+
 build-debug:
     gradle assembleDebug
 
