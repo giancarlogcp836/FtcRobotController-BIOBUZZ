@@ -12,6 +12,7 @@
         jdk8
         gradle
         android-tools
+        ktlint
 
         just
       ];

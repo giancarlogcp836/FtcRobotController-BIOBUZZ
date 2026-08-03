@@ -6,6 +6,9 @@ dev: build-debug deploy-debug
 # Build and deploy the code to the robot (release).
 release: build-release deploy-release
 
+fmt:
+    ktlint -F
+
 build-debug:
     gradle assembleDebug
 
@@ -23,6 +26,7 @@ clean:
 
 toolchains:
     gradle javaToolchains
+
 
 # Connect to the robot over Wi-Fi, this has to happen before uploading code.
 _adb-connect:
