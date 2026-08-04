@@ -1,65 +1,63 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
+import com.pedropathing.follower.Follower
+import com.pedropathing.geometry.BezierLine
+import com.pedropathing.geometry.Pose
 import com.pedropathing.ivy.Command
 import com.pedropathing.ivy.commands.Commands
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.pedropathing.ivy.pedro.PedroCommands
+import com.pedropathing.paths.PathBuilder
+import com.pedropathing.paths.PathChain
+import com.pedropathing.paths.PathConstraints
 import org.firstinspires.ftc.teamcode.config.BindingsConfig
 import org.firstinspires.ftc.teamcode.config.DriveConfig
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants
 import org.firstinspires.ftc.teamcode.state.managers.BindingManager
 import org.firstinspires.ftc.teamcode.state.managers.HardwareManager
-import kotlin.math.abs
-import kotlin.math.max
 
 class Drive(
     hardwareManager: HardwareManager,
 ) {
-    private val leftFront: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.leftFrontName)
-    private val leftRear: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.leftRearName)
-    private val rightFront: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.rightFrontName)
-    private val rightRear: DcMotorEx = hardwareManager.requireHardware<DcMotorEx>(DriveConfig.rightRearName)
+    val follower: Follower = Constants.createFollower(hardwareManager.hardwareMap)
 
-    init {
-        listOf(leftFront, leftRear, rightFront, rightRear).forEach { motor ->
-            motor.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
-            motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        }
-        applyDirections()
+    val pose: Pose
+        get() = follower.pose
+
+    fun update() {
+        follower.update()
     }
 
-    private fun applyDirections() {
-        leftFront.direction = DriveConfig.leftFrontDirection.toDcMotorDirection()
-        leftRear.direction = DriveConfig.leftRearDirection.toDcMotorDirection()
-        rightFront.direction = DriveConfig.rightFrontDirection.toDcMotorDirection()
-        rightRear.direction = DriveConfig.rightRearDirection.toDcMotorDirection()
+    fun setStartingPose(pose: Pose) {
+        follower.setStartingPose(pose)
     }
+
+    fun pathBuilder(): PathBuilder = follower.pathBuilder()
+
+    fun pathBuilder(constraints: PathConstraints): PathBuilder = follower.pathBuilder(constraints)
 
     fun setPowers(
         forward: Double,
         strafe: Double,
         turn: Double,
+        robotCentric: Boolean = true,
     ) {
-        applyDirections()
-
-        val fl = forward + strafe + turn
-        val fr = forward - strafe - turn
-        val bl = forward - strafe + turn
-        val br = forward + strafe - turn
-
-        val max = max(1.0, max(abs(fl), max(abs(fr), max(abs(bl), abs(br)))))
-        leftFront.power = fl / max
-        rightFront.power = fr / max
-        leftRear.power = bl / max
-        rightRear.power = br / max
+        follower.setTeleOpDrive(forward, strafe, turn, robotCentric)
     }
 
     fun stop() {
-        setPowers(0.0, 0.0, 0.0)
+        follower.startTeleopDrive(true)
+        follower.setTeleOpDrive(0.0, 0.0, 0.0, true)
     }
 
-    fun teleopDrive(bindings: BindingManager): Command =
+    fun teleopDrive(
+        bindings: BindingManager,
+        robotCentric: Boolean = true,
+    ): Command =
         Commands
             .infinite {
+                if (!follower.isTeleopDrive) {
+                    follower.startTeleopDrive(true)
+                }
                 val forward = bindings.readAnalog(BindingsConfig.driveY).toDouble() * DriveConfig.maxSpeed
                 val strafe =
                     bindings.readAnalog(BindingsConfig.driveX).toDouble() *
@@ -69,9 +67,52 @@ class Drive(
                     bindings.readAnalog(BindingsConfig.driveTurn).toDouble() *
                         DriveConfig.maxSpeed *
                         DriveConfig.turnMultiplier
-                setPowers(forward, strafe, turn)
+                setPowers(forward, strafe, turn, robotCentric)
             }.setEnd { stop() }
             .requiring(this)
 
     fun stopCommand(): Command = Commands.instant { stop() }.requiring(this)
+
+    fun follow(
+        pathChain: PathChain,
+        holdEnd: Boolean = false,
+    ): Command = PedroCommands.follow(follower, pathChain, holdEnd).requiring(this)
+
+    fun follow(
+        pathChain: PathChain,
+        holdEnd: Boolean,
+        maxPower: Double,
+    ): Command = PedroCommands.follow(follower, pathChain, holdEnd, maxPower).requiring(this)
+
+    fun goTo(
+        destination: Pose,
+        holdEnd: Boolean = false,
+    ): Command =
+        Commands
+            .lazy {
+                val start = pose
+                follow(
+                    pathBuilder()
+                        .addPath(BezierLine(start, destination))
+                        .setLinearHeadingInterpolation(start.heading, destination.heading)
+                        .build(),
+                    holdEnd,
+                )
+            }.requiring(this)
+
+    fun hold(): Command = PedroCommands.hold(follower).requiring(this)
+
+    fun hold(pose: Pose): Command = PedroCommands.hold(follower, pose).requiring(this)
+
+    fun hold(
+        pose: Pose,
+        constraints: PathConstraints,
+    ): Command = PedroCommands.hold(follower, pose, constraints).requiring(this)
+
+    fun turnTo(radians: Double): Command = PedroCommands.turnTo(follower, radians).requiring(this)
+
+    fun turnTo(
+        radians: Double,
+        constraints: PathConstraints,
+    ): Command = PedroCommands.turnTo(follower, radians, constraints).requiring(this)
 }

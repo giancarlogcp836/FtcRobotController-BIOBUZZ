@@ -5,7 +5,6 @@ import com.pedropathing.geometry.BezierLine
 import com.pedropathing.geometry.Pose
 import com.pedropathing.ivy.Command
 import com.pedropathing.ivy.groups.Groups
-import com.pedropathing.ivy.pedro.PedroCommands
 import com.pedropathing.paths.PathChain
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.teamcode.opmode.PedroCommandOpMode
@@ -32,7 +31,7 @@ class SampleAuto : PedroCommandOpMode() {
 
     override fun onPedroInit() {
         buildPaths()
-        follower.setStartingPose(startPose)
+        drive.setStartingPose(startPose)
         autoRoutine = buildAutoRoutine()
     }
 
@@ -41,7 +40,7 @@ class SampleAuto : PedroCommandOpMode() {
     }
 
     override fun onPedroLoop() {
-        val pose = follower.pose
+        val pose = drive.pose
         panelsTelemetry.debug("x: ${pose.x}")
         panelsTelemetry.debug("y: ${pose.y}")
         panelsTelemetry.debug("heading: ${pose.heading}")
@@ -50,56 +49,56 @@ class SampleAuto : PedroCommandOpMode() {
 
     private fun buildPaths() {
         scorePreload =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierLine(startPose, scorePose))
                 .setLinearHeadingInterpolation(startPose.heading, scorePose.heading)
                 .build()
 
         grabPickup1 =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierLine(scorePose, pickup1Pose))
                 .setLinearHeadingInterpolation(scorePose.heading, pickup1Pose.heading)
                 .build()
 
         scorePickup1 =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierLine(pickup1Pose, scorePose))
                 .setLinearHeadingInterpolation(pickup1Pose.heading, scorePose.heading)
                 .build()
 
         grabPickup2 =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierCurve(scorePose, Pose(60.0, 54.0), pickup2Pose))
                 .setLinearHeadingInterpolation(scorePose.heading, pickup2Pose.heading)
                 .build()
 
         scorePickup2 =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierCurve(pickup2Pose, Pose(60.0, 54.0), scorePose))
                 .setLinearHeadingInterpolation(pickup2Pose.heading, scorePose.heading)
                 .build()
 
         grabPickup3 =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierCurve(scorePose, Pose(60.0, 30.0), pickup3Pose))
                 .setLinearHeadingInterpolation(scorePose.heading, pickup3Pose.heading)
                 .build()
 
         scorePickup3 =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierCurve(pickup3Pose, Pose(60.0, 30.0), scorePose))
                 .setLinearHeadingInterpolation(pickup3Pose.heading, scorePose.heading)
                 .build()
 
         leave =
-            follower
+            drive
                 .pathBuilder()
                 .addPath(BezierLine(scorePose, endPose))
                 .setConstantHeadingInterpolation(scorePose.heading)
@@ -108,13 +107,13 @@ class SampleAuto : PedroCommandOpMode() {
 
     private fun buildAutoRoutine(): Command =
         Groups.sequential(
-            PedroCommands.follow(follower, scorePreload),
-            PedroCommands.follow(follower, grabPickup1, true),
-            PedroCommands.follow(follower, scorePickup1, true),
-            PedroCommands.follow(follower, grabPickup2, true),
-            PedroCommands.follow(follower, scorePickup2, true),
-            PedroCommands.follow(follower, grabPickup3, true),
-            PedroCommands.follow(follower, scorePickup3, true),
-            PedroCommands.follow(follower, leave, true),
+            drive.follow(scorePreload),
+            drive.follow(grabPickup1, holdEnd = true),
+            drive.follow(scorePickup1, holdEnd = true),
+            drive.follow(grabPickup2, holdEnd = true),
+            drive.follow(scorePickup2, holdEnd = true),
+            drive.follow(grabPickup3, holdEnd = true),
+            drive.follow(scorePickup3, holdEnd = true),
+            drive.follow(leave, holdEnd = true),
         )
 }

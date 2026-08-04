@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.opmode
 
-import com.pedropathing.follower.Follower
 import com.pedropathing.ivy.Scheduler
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants
+import org.firstinspires.ftc.teamcode.subsystems.Drive
 
 abstract class PedroCommandOpMode : CommandOpMode() {
-    protected lateinit var follower: Follower
+    protected lateinit var drive: Drive
         private set
 
     final override fun onInit() {
-        follower = Constants.createFollower(hardwareMap)
+        drive = Drive(hardware)
         onPedroInit()
     }
 
     final override fun onLoop() {
-        follower.update()
+        drive.update()
         onPedroLoop()
     }
 
