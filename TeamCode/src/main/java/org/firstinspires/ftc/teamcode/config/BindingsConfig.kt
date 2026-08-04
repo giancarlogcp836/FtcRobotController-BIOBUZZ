@@ -34,27 +34,4 @@ object BindingsConfig {
             deadZone = 0.05f,
             scale = 1f,
         )
-
-    @JvmField
-    var armManual: AnalogBinding =
-        AnalogBinding(
-            gamepad = GamepadId.TWO,
-            action = AnalogAction.LEFT_STICK_Y,
-            deadZone = 0.1f,
-            scale = 1f,
-        )
-
-    @JvmField
-    var armScore: BinaryBinding =
-        BinaryBinding(
-            gamepad = GamepadId.TWO,
-            action = BinaryAction.TRIANGLE,
-        )
-
-    @JvmField
-    var armStow: BinaryBinding =
-        BinaryBinding(
-            gamepad = GamepadId.TWO,
-            action = BinaryAction.CROSS,
-        )
 }

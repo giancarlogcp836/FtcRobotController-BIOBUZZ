@@ -11,9 +11,6 @@ import org.firstinspires.ftc.teamcode.state.managers.HardwareManager
 import kotlin.math.abs
 import kotlin.math.max
 
-/**
- * Ivy-owned drive subsystem. Tunable values live in [DriveConfig] / [BindingsConfig].
- */
 class Drive(
     hardwareManager: HardwareManager,
 ) {
@@ -60,10 +57,6 @@ class Drive(
         setPowers(0.0, 0.0, 0.0)
     }
 
-    /**
-     * Continuous teleop field-relative-style mecanum drive from [BindingsConfig] sticks.
-     * Speeds are read live from [DriveConfig] each loop.
-     */
     fun teleopDrive(bindings: BindingManager): Command =
         Commands
             .infinite {

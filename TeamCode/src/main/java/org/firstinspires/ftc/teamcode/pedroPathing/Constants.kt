@@ -12,10 +12,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.teamcode.config.DriveConfig
 
-/**
- * Pedro Pathing constants. Motor names/directions come from [DriveConfig].
- * Localization uses goBILDA Pinpoint — tune offsets via the Tuning OpMode, then copy back here.
- */
 @Configurable
 object Constants {
     @JvmField

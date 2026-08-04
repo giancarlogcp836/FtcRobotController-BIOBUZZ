@@ -1,22 +1,15 @@
-package org.firstinspires.ftc.teamcode.opmode
+package org.firstinspires.ftc.teamcode.opmode.auto
 
-import com.bylazar.telemetry.PanelsTelemetry
-import com.bylazar.telemetry.TelemetryManager
 import com.pedropathing.geometry.BezierCurve
 import com.pedropathing.geometry.BezierLine
 import com.pedropathing.geometry.Pose
 import com.pedropathing.ivy.Command
-import com.pedropathing.ivy.groups.Groups.sequential
-import com.pedropathing.ivy.pedro.PedroCommands.follow
+import com.pedropathing.ivy.groups.Groups
+import com.pedropathing.ivy.pedro.PedroCommands
 import com.pedropathing.paths.PathChain
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.opmode.PedroCommandOpMode
 
-/**
- * Example Ivy autonomous using Pedro Pathing + Pinpoint.
- *
- * Path-only template from the Pedro DECODE example. Insert subsystem commands
- * (e.g. arm.raiseTo()) between [follow] calls when mechanisms are ready.
- */
 @Autonomous(name = "Sample Auto", group = "Samples")
 class SampleAuto : PedroCommandOpMode() {
     private val startPose = Pose(22.0, 122.0, Math.toRadians(324.0))
@@ -114,15 +107,14 @@ class SampleAuto : PedroCommandOpMode() {
     }
 
     private fun buildAutoRoutine(): Command =
-        sequential(
-            // Score preload — insert scoring command after this follow when ready
-            follow(follower, scorePreload),
-            follow(follower, grabPickup1, true),
-            follow(follower, scorePickup1, true),
-            follow(follower, grabPickup2, true),
-            follow(follower, scorePickup2, true),
-            follow(follower, grabPickup3, true),
-            follow(follower, scorePickup3, true),
-            follow(follower, leave, true),
+        Groups.sequential(
+            PedroCommands.follow(follower, scorePreload),
+            PedroCommands.follow(follower, grabPickup1, true),
+            PedroCommands.follow(follower, scorePickup1, true),
+            PedroCommands.follow(follower, grabPickup2, true),
+            PedroCommands.follow(follower, scorePickup2, true),
+            PedroCommands.follow(follower, grabPickup3, true),
+            PedroCommands.follow(follower, scorePickup3, true),
+            PedroCommands.follow(follower, leave, true),
         )
 }
