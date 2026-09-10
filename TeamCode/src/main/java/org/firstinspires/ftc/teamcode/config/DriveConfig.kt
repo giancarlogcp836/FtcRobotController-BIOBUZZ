@@ -15,25 +15,25 @@ object DriveConfig {
     var turnMultiplier: Double = 0.8
 
     @JvmField
-    var leftFrontName: String = "lf"
+    var frontLeftName: String = "lf"
 
     @JvmField
-    var leftRearName: String = "lr"
+    var backLeftName: String = "lr"
 
     @JvmField
-    var rightFrontName: String = "rf"
+    var frontRightName: String = "rf"
 
     @JvmField
-    var rightRearName: String = "rr"
+    var backRightName: String = "rr"
 
     @JvmField
-    var leftFrontDirection: MotorDirection = MotorDirection.REVERSE
+    var frontLeftDirection: MotorDirection = MotorDirection.REVERSE
 
     @JvmField
-    var leftRearDirection: MotorDirection = MotorDirection.REVERSE
+    var backLeftDirection: MotorDirection = MotorDirection.REVERSE
 
     @JvmField
-    var rightFrontDirection: MotorDirection = MotorDirection.FORWARD
+    var frontRightDirection: MotorDirection = MotorDirection.FORWARD
 
     @JvmField
     var rightRearDirection: MotorDirection = MotorDirection.FORWARD

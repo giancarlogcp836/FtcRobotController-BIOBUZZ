@@ -13,9 +13,9 @@ class SampleTeleOp : PedroCommandOpMode() {
     override fun onPedroLoop() {
         val pose = drive.pose
         panelsTelemetry.debug("drive.maxSpeed: ${DriveConfig.maxSpeed}")
-        panelsTelemetry.debug("x: ${pose.x}")
-        panelsTelemetry.debug("y: ${pose.y}")
-        panelsTelemetry.debug("heading: ${pose.heading}")
+        panelsTelemetry.debug("x: ${pose.x()}")
+        panelsTelemetry.debug("y: ${pose.y()}")
+        panelsTelemetry.debug("heading: ${pose.heading()}")
         panelsTelemetry.update(telemetry)
     }
 }
