@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.config.DriveConfig
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants
 import org.firstinspires.ftc.teamcode.state.managers.BindingManager
 import org.firstinspires.ftc.teamcode.state.managers.HardwareManager
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 class Drive(
     hardwareManager: HardwareManager,
@@ -17,6 +19,9 @@ class Drive(
     val follower = Constants.createFollower(hardwareManager.hardwareMap)
 
     val pose: Pose get() = follower.pose()
+
+    var preciseMode = false
+    var preciseModeLastToggle: Instant = Instant.fromEpochSeconds(0)
 
     fun update() {
         follower.update()
@@ -52,21 +57,40 @@ class Drive(
         follower.stop()
     }
 
+    fun togglePreciseMode(bindings: BindingManager) {
+        val now = Clock.System.now()
+        if (preciseModeLastToggle - now >= DriveConfig.preciseToggleDebounce) return
+
+        preciseModeLastToggle = now
+        preciseMode = !preciseMode
+        bindings.rumble(DriveConfig.preciseToggleRumbleDuration)
+    }
+
     fun teleopDrive(
         bindings: BindingManager,
         robotCentric: Boolean = true,
     ): Command =
         Commands
             .infinite {
-                val forward = bindings.readAnalog(BindingsConfig.driveY).toDouble() * DriveConfig.maxSpeed
-                val strafe =
+                var forward = bindings.readAnalog(BindingsConfig.driveY).toDouble() * DriveConfig.maxSpeed
+                var strafe =
                     bindings
                         .readAnalog(BindingsConfig.driveX)
                         .toDouble() * DriveConfig.maxSpeed * DriveConfig.strafeMultiplier
-                val turn =
+                var turn =
                     bindings
                         .readAnalog(BindingsConfig.driveTurn)
                         .toDouble() * DriveConfig.maxSpeed * DriveConfig.turnMultiplier
+
+                if (bindings.readBinary(BindingsConfig.drivePreciseMode)) {
+                    togglePreciseMode(bindings)
+                }
+
+                if (preciseMode) {
+                    forward *= DriveConfig.preciseMultiplier
+                    strafe *= DriveConfig.preciseMultiplier
+                    turn *= DriveConfig.preciseMultiplier
+                }
 
                 setPowers(forward, strafe, turn, robotCentric)
             }.setEnd { stop() }

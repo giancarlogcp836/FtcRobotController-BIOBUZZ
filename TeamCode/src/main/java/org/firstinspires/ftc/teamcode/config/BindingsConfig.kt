@@ -34,4 +34,8 @@ object BindingsConfig {
             deadZone = 0.05f,
             scale = 1f,
         )
+
+    @JvmField
+    var drivePreciseMode: BinaryBinding =
+        BinaryBinding(gamepad = GamepadId.ONE, action = BinaryAction.TRIANGLE)
 }
