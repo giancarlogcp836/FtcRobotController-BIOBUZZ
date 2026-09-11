@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.config
 
 import com.bylazar.configurables.annotations.Configurable
 import org.firstinspires.ftc.teamcode.state.MotorDirection
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 @Configurable
 object DriveConfig {
@@ -13,6 +15,12 @@ object DriveConfig {
 
     @JvmField
     var turnMultiplier: Double = 0.8
+
+    @JvmField
+    var preciseMultiplier: Double = 0.25
+
+    var preciseToggleRumbleDuration: Duration = 500.milliseconds
+    var preciseToggleDebounce: Duration = 500.milliseconds
 
     @JvmField
     var frontLeftName: String = "lf"
